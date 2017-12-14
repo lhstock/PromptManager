@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Prompt-Manager</title>
+  <link rel="stylesheet" href="./css/main.css">
+  <script src="./js/d3v4.js"></script>
+  <script src="./js/jquery.min.js"></script>
+  <script src="./js/iconfont.js"></script>
+  <!-- <script src="//unpkg.com/vue/dist/vue.js"></script> -->
+  <!-- <script src="//unpkg.com/element-ui@2.0.8/lib/index.js"></script> -->
+  <script src="//unpkg.com/vue/dist/vue.js"></script>
+  <script src="//unpkg.com/element-ui@2.0.8/lib/index.js"></script>
+
+
+</head>
+<style>
+  @import url("//unpkg.com/element-ui@2.0.8/lib/theme-chalk/index.css");
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+
+  .demo-table-expand {
+    font-size: 0;
+  }
+
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    /* width: 50%; */
+  }
+</style>
+
+<body>
+  <div class="main">
+    <div id="views" class="view">
+      <!-- <div></div> -->
+    </div>
+    <div class="opacity">
+      <div>
+        <p>切换楼层</p>
+        <ul id="floors">
+          <li data-num="1" class="active">1f</li>
+          <li data-num="2">2f</li>
+          <li data-num="3">3f</li>
+          <li data-num="4">4f</li>
+        </ul>
+      </div>
+      <div>
+        <p>Data</p>
+        <ul id="dataSource">
+          <li data-num="http://app.wxmuseum.com/mbi/service-mbi/exh/getAllExhibitsByMapId/"> prompt</li>
+          <li data-num="./json/ibeacon-">ibeacon</li>
+          <li data-num='./json/node'>node</li>
+        </ul>
+      </div>
+      <!-- <div>
+        <p>node</p>
+        <ul id="edit" class="node">
+          <li>
+            add
+          </li>
+          <li>
+            del
+          </li>
+        </ul>
+      </div> -->
+      <div>
+        <p>数据坐标</p>
+        <div>
+          <p>prompt</p>
+          <div id="promptview">
+            <template>
+              <el-table ref="multipleTable" :data="tableData" height="300" style="width: 100%" :row-class-name="tableRowClassName">
+
+                <el-table-column type="expand">
+                  <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                      <el-form-item label="商品名称">
+                        <span>{{ props.row.exhibitionId }}</span>
+                      </el-form-item>
+                      <el-form-item label="所属店铺">
+                        <span>{{ props.row.exhibitionAddress }}</span>
+                      </el-form-item>
+                      <el-form-item label="商品 ID">
+                        <span>{{ props.row.exhibitionAuthor }}</span>
+                      </el-form-item>
+                      <!-- <el-form-item label="店铺 ID">
+                          <span>{{ props.row.shopId }}</span>
+                        </el-form-item>
+                        <el-form-item label="商品分类">
+                          <span>{{ props.row.category }}</span>
+                        </el-form-item>
+                        <el-form-item label="店铺地址">
+                          <span>{{ props.row.address }}</span>
+                        </el-form-item>
+                        <el-form-item label="商品描述">
+                          <span>{{ props.row.desc }}</span>
+                        </el-form-item> -->
+                    </el-form>
+                  </template>
+                </el-table-column>
+                <el-table-column type="selection" width="55">
+                </el-table-column>
+                <el-table-column type="index" :index="indexMethod">
+                  </el-table-column>
+                <el-table-column prop="id" label="id">
+                </el-table-column>
+                <el-table-column prop="coorx" label="coorx">
+                </el-table-column>
+                <el-table-column prop="coory" label="coory">
+                </el-table-column>
+                <el-table-column prop="status" label="状态" :filters="[{ text: 'init', value: 'init' }, { text: 'move', value: 'move' },{text:'done',value:'done'}]"
+                  :filter-method="filterTag" filter-placement="bottom-end">
+                  <template slot-scope="scope">
+                    <el-tag :type="scope.row.status === 'init' ? 'primary' : 'success'" close-transition>{{scope.row.status}}</el-tag>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="margin-top: 20px">
+                <el-button @click='add()'>添加</el-button>
+                <el-button @click='remove()'>删除</el-button>
+                <el-button @click='commit()'>提交</el-button>
+                <!-- <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button> -->
+                <!-- <el-button @click="toggleSelection()">取消选择</el-button> -->
+
+              </div>
+            </template>
+          </div>
+
+        </div>
+        <div>
+          <p>ibeacon</p>
+          <a href="#">add</a>
+          <a href="#">del</a>
+          <div id="ibeaconview">
+            <table border="1">
+              <tr>
+                <td>id</td>
+                <td>coorx</td>
+                <td>coory</td>
+              </tr>
+            </table>
+            <div id="ibeaconTable" style="height:100px;width:140px;overflow:auto">
+              <table border="1">
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div>
+          <p>node</p>
+          <div id="nodeview">
+            <table border="1">
+              <tr>
+                <td>id</td>
+                <td>coorx</td>
+                <td>coory</td>
+              </tr>
+            </table>
+            <div id="nodeTable" style="height:100px;width:140px;overflow:auto">
+              <table border="1">
+              </table>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p>links</p>
+          <div id="linksview">
+            <table border="1">
+              <tr>
+                <td>id</td>
+                <td>coorx</td>
+                <td>coory</td>
+              </tr>
+            </table>
+            <div id="linksTable" style="height:100px;width:140px;overflow:auto">
+              <table border="1">
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="./js/Unit.js"></script>
+<script src="./js/SignData.js"> </script>
+<script src="./js/Table.js"></script>
+<script src="./js/env.js"></script>
+<script src="./js/main.js"></script>
+
+</html>

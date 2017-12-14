@@ -1,0 +1,116 @@
+body{
+  margin: 0;
+  padding: 0;
+}
+
+.main{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+
+.view{
+/* flex: auto; */
+flex-basis: 50vw;
+/* background: rebeccapurple; */
+margin: 5px;
+}
+
+.opacity{
+  /* width: 15rem; */
+flex: auto;
+flex-grow: 1;
+background: rgb(163, 160, 160);
+margin: 5px 0 ;
+}
+
+.opacity>div{
+  border-color: rgb(66, 59, 59);
+  border-width: 2px;
+  margin: 3px;
+  border-style: solid;
+}
+
+.opacity,p{
+  margin: 0;
+}
+
+.opacity,ul{
+  margin: 0;
+    list-style: none;
+}
+
+.view canvas{
+  background: gray;
+}
+
+
+#floors>li:hover{
+  background: #6cf;
+}
+#floors>li.active{
+  color: #ffffff;
+background: #f60;
+}
+
+#dataSource>li:hover{
+  background: #6cf;
+}
+
+#dataSource>li.active{
+  color: #ffffff;
+background: #f60;
+}
+
+
+#ibeaconLocal .active{
+  color: #ffffff;
+background: #f60;
+
+}
+
+#edit>li:hover{
+  /* float: left; */
+  /* margin-left: 5px; */
+  background: #6cf;
+}
+
+#edit>li:active{
+  background: #f60;
+}
+
+/* li:hover{
+  background: #6cf;
+} */
+/* li:active{
+  background: #f60;
+  color: #fff;
+} */
+
+#promptview{
+  display: none;
+}
+#ibeaconview{
+  display: none;
+}
+#nodeview{
+  display: none;
+}
+#linksview{
+  display: none;
+}
+#promptview.active{
+
+display: block;
+}
+#ibeaconview.active{
+
+display: block;
+}
+#nodeview.active{
+
+display: block;
+}
+#linksview.active{
+display: block;
+}
