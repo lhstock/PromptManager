@@ -1,3 +1,4 @@
+
 body{
   margin: 0;
   padding: 0;
@@ -10,21 +11,21 @@ body{
 }
 
 .view{
-/* flex: auto; */
-flex-basis: 50vw;
-/* background: rebeccapurple; */
+flex-basis: 64vw;
 margin: 5px;
 }
 
 .opacity{
-  /* width: 15rem; */
 flex: auto;
 flex-grow: 1;
 background: rgb(163, 160, 160);
 margin: 5px 0 ;
+height: 100vh;
 }
-
-.opacity>div{
+.eltable{
+width:calc(36vw - 100px);
+}
+.Box{
   border-color: rgb(66, 59, 59);
   border-width: 2px;
   margin: 3px;
@@ -38,6 +39,13 @@ margin: 5px 0 ;
 .opacity,ul{
   margin: 0;
     list-style: none;
+}
+.opacity ul>li{
+  float: left;
+  margin-right: 20px;
+}
+.clear{
+ clear: left;
 }
 
 .view canvas{
@@ -113,4 +121,12 @@ display: block;
 }
 #linksview.active{
 display: block;
+}
+.el-table{
+  left: 15px;
+}
+
+.coord,Box{
+  height: calc(100vh - 7rem);
+  overflow: auto;
 }

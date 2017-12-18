@@ -1,28 +1,32 @@
 !function () {
   var elmTable = {};
+  elmTable.data = new Sign();
   elmTable.Create = function (labelid) {
+    // elmTable[labelid] = {};
     return CreateElmTable(labelid);
   }
   function CreateElmTable(label) {
     var _ = {};
     _.labelid = label + 'view';
-    var dataM = new Sign();
+    // var dataM = new Sign();
 
-    _.data = dataM;
-    var Fun = {
-      "prompt": prompt
-    }
-    Fun[label]();
-    function prompt() {
-      _.em = new Vue({
-        el: "#"+_.labelid,
+    // _.data = dataM;
+    _[label] = {};
+    // var Fun = {
+    //   "prompt": prompt
+    // }
+    // Fun[label]();
+    prompt.call(this, _[label])
+    function prompt(obj) {
+      obj.em = new Vue({
+        el: "#" + _.labelid,
         data: {
-          tableData: _.data[label],
+          tableData: elmTable.data[label],
           multipleSelection: [],
         },
         methods: {
           indexMethod(index) {
-            return index ;
+            return index;
           },
           // toggleSelection(rows) {
           //   if (rows) {
@@ -34,11 +38,11 @@
           //   }
           // },
           add() {
-            _.data.add('prompt');
+            elmTable.data.add(label);
             env.Draw();
           },
           remove() {
-            _.data.remove('prompt');
+            elmTable.data.remove(label);
             env.Draw()
           },
           formatter(row, column) {
@@ -48,7 +52,6 @@
             return row.status === value;
           },
           tableRowClassName({ row, rowIndex }) {
-            console.log(row,rowIndex)
             if (row.status == 'init') {
               return ''
             }
@@ -61,10 +64,9 @@
           }
         }
       })
+      // return _[label];
     }
-
-  
-    return _;
+    return _[label];
   }
   window.elmTable = elmTable;
 }()

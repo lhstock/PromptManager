@@ -83,7 +83,6 @@
               if (!s) {
                 obj.classList.add("active");
                 getData.call(this, 0);
-                console.log(obj);
                 promptview.classList.add('active');
 
               } else {
@@ -157,10 +156,8 @@
                     if (!o.dataManager.prompt.length) alert("数据为空")
                   } else {
                     o.dataManager.clearPrompt();
-                        o.SYNC();
+                    o.SYNC();
                     draw('prompt');
-                    // table1.data = o.dataManager.prompt;
-                    // table1.Draw('prompt');
 
 
                   }
@@ -216,6 +213,9 @@
 
     SYNC() {
       table1.em.tableData = dataManager.prompt;
+      table2.em.tableData = dataManager.ibeacon;
+      table3.em.tableData = dataManager.node;
+      table4.em.tableData = dataManager.links;
     }
 
     Export() {
@@ -236,10 +236,9 @@
 
   window.dataManager = new Sign();
   window.table1 = elmTable.Create('prompt');
-  // window.ddd = [1,2,3]
-  // table1.BindData(dataManager.prompt);
-  // table1.BindData(ddd);
-  // table1.Draw('prompt');
+  window.table2 = elmTable.Create('ibeacon');
+  window.table3 = elmTable.Create('node');
+  window.table4 = elmTable.Create('links')
   window.n = new Ctrl(dataManager);
   window.env = new MapEnv('views');
 }
