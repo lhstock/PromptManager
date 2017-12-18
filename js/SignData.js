@@ -47,8 +47,8 @@
         case 'node':
           var obj = this[key][num - 1];
           var id = obj ? +obj.id + 1 : 1;
-          var json = '{"id":' + id + '"coorx":900,"coory":900,"status":"init"}';
-          var o = JSON.parse(o);
+          var json = '{"id":' + id + ',"coorx":900,"coory":900,"status":"init"}';
+          var o = JSON.parse(json);
           this[key].push(o);
  
           break;  

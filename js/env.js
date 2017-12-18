@@ -2,7 +2,6 @@
 ((window) => {
   class MapEnv {
     constructor(labelid) {
-      // let table = new PromptTable();
       let unit = new Unit();
       let obj = this;
       let url = './img/1f.jpg';
@@ -24,11 +23,23 @@
       let objImgBg = new Image();
       this.dataImg = [5378, 2174, url, 1];
       this.labelid = labelid;
-      // this.dataPromptO;
       this.dataPrompt = [];
       this.dataIbeacon = [];
       this.dataNode = [];
       this.dataLinks = [];
+      this.lineTool = d3.line()
+        .x(function (d) {
+          var source = env.dataNode[d.id];
+          var x = coordToPiex(+source.coorx);
+          var xx = piexScale(x, "x") - margin[0];
+          return xx;
+        })
+        .y(function (d) {
+          var source = env.dataNode[d.id];
+          var y = coordToPiex(+source.coory);
+          var yy = piexScale(y, "y") - margin[1];
+          return yy;
+        })
       this.list = [this.dataPrompt, this.dataIbeacon, this.dataNode, this.dataLinks]
       let node = [];
       this.width = getAttr(this.labelid, "width");
@@ -37,6 +48,8 @@
       let viewProt = new viewModel([this.width, this.height]);
       let imgProt = setImgProt.call(this);
       let canvasProt = new viewModel();
+      this.lineStatus = 0;
+      let env = this;
       writeCanvasProt.call(this);
 
       this.box = window[this.labelid];
@@ -48,22 +61,13 @@
         this.dataImg = data;
         objImgBg = new Image();
         objImgBg.src = data[2];
-        // drawBackgrounImgOnCanvas.call(this);
       }
       this.SetData = function (str, data) {
         this[str] = data;
       }
-      // this.SetDataPrompt = function (data) {
-      //   this.dataPromptO = data;
-      //   // this.dataPrompt = unit.deepCopy(this.dataPromptO);
-      //   this.dataPrompt = this.dataPromptO;
-      // }
-
       function drawBackgrounImgOnCanvas() {
         objImgBg.src = this.dataImg[2];
         objImgBg.onload = function () {
-          // objImgBg.width = ;
-          // objImgBg.height = ;
           clearCtx.call(this);
           drawBg.call(this);
           statusImgBg = true;
@@ -77,52 +81,95 @@
       function drawPrompts(str) {
         let c = str.substring(4, str.length).toLowerCase();
         let prompts = this.svg.select('.' + c).selectAll("use").data(this[str]);
-        prompts.enter()
-          .append("use")
-          .attr("class", c)
-          .attr("width", "32px")
-          .attr("height", "44px")
-          .attr("x",
-          // d.x = piexScale(coordToPiex(+d.coorx), 'x') - margin[0]
-          function (d) {
-            var x = coordToPiex(+d.coorx);
-            var xx = piexScale(x, "x") - margin[0];
-            d.x = xx;
-            
-            return xx;
-          }
-          )
-          .attr("y",
-          // d.y = piexScale(coordToPiex(+d.coory), "y") - margin[1]
-          function (d) {
-            var y = coordToPiex(+d.coory);
-            var yy = piexScale(y, "y") - margin[1];
-            d.y = yy;
-            return yy;
-          }
-          )
-          // .style("transform", function (d) {
-          //   var x = coordToPiex(+d.coorx);
-          //   var y = coordToPiex(+d.coory);
-          //   var xx = piexScale(x, "x") - margin[0];
-          //   var yy = piexScale(y, "y") - margin[1];
-          //   var t = "translate(" + xx + "px," + yy + "px)";
-          //   return t;
-          // })
-          .attr("xlink:href", "#icon-" + c)
-          .style("opacity", 1)
+        if (c == 'node') {
+          prompts.enter()
+            .append("circle")
+            .attr("class", c)
+            // .attr("width", "30px")
+            // .attr("height", "30px")
+            .attr("r", '5px')
+            .attr("cx",
+            function (d) {
+              var x = coordToPiex(+d.coorx);
+              var xx = piexScale(x, "x") - margin[0];
+              d.x = xx;
+              return xx;
+            })
+            .attr("cy",
+            function (d) {
+              var y = coordToPiex(+d.coory);
+              var yy = piexScale(y, "y") - margin[1];
+              d.y = yy;
+              return yy;
+            })
+            .attr('fill', 'red')
+            // .attr("xlink:href", "#icon-" + c)
+            .style("opacity", 1)
+            .style("pointer-events", "fill")
+            .call(d3.drag()
+              .on("start", dragNodeStart)
+              .on("drag", dragNodeed)
+              .on("end", dragNodeEnd)
+            )
+            .on("click", function (d) {
+              console.log("click", d, d3.event)
+              // env.lineStatus = env.lineStatus ^ 1;
+              if (env.lineStatus == 0) {
+                d3.select('#pathBg')
+                  .style('pointer-events', 'fill')
+                  .style('fill-opacity', .2)
+                var links = { "source": d.id - 1, "target": d.id - 1 }
+                env.dataLinks.push(links);
+              } else {
+                d3.select('#pathBg')
+                  .style('pointer-events', 'none')
+                  .style('fill-opacity', 0)
+                var links = env.dataLinks.pop();
+                links.target = d.id - 1;
+                env.dataLinks.push(links);
+              }
+              env.lineStatus = env.lineStatus ^ 1;
+              // var path = [[d.coorx, d.coory], [d.coorx, d.coory]];
+              // var line = this.svg.select('.line').selectAll("path").data(path);
+              // line.enter()
+              //   .append('path')
+              //   .attr("d", )
+            })
+        } else {
+          prompts.enter()
+            .append("use")
+            .attr("class", c)
+            .attr("width", "32px")
+            .attr("height", "44px")
+            .attr("x",
+            function (d) {
+              var x = coordToPiex(+d.coorx);
+              var xx = piexScale(x, "x") - margin[0];
+              d.x = xx;
+              return xx;
+            })
+            .attr("y",
+            function (d) {
+              var y = coordToPiex(+d.coory);
+              var yy = piexScale(y, "y") - margin[1];
+              d.y = yy;
+              return yy;
+            })
+            .attr("xlink:href", "#icon-" + c)
+            .style("opacity", 1)
+            .style("pointer-events", "fill")
+            .call(d3.drag()
+              .on("start", dragStart)
+              .on("drag", draged)
+              .on("end", dragEnd)
+            )
 
-          .style("pointer-events", "fill")
-          .call(d3.drag()
-            .on("start", dragStart)
-            .on("drag", draged)
-            .on("end", dragEnd)
-          )
-          ;
+        }
+
         prompts
           .attr("x",
-          // d.x = piexScale(coordToPiex(+d.coorx), 'x') - margin[0]
           function (d) {
+            console.log('!!!!!!')
             var x = coordToPiex(+d.coorx);
             var xx = piexScale(x, "x") - margin[0];
             d.x = xx;
@@ -131,7 +178,6 @@
           }
           )
           .attr("y",
-          // d.y = piexScale(coordToPiex(+d.coory), 'y') - margin[1]
           function (d) {
             var y = coordToPiex(+d.coory);
             var yy = piexScale(y, "y") - margin[1];
@@ -140,78 +186,61 @@
             return yy;
           }
           )
-        // .style("transform", function (d) {
-        //   var x = coordToPiex(+d.coorx);
-        //   var y = coordToPiex(+d.coory);
-        //   var xx = piexScale(x, "x") - margin[0];
-        //   var yy = piexScale(y, "y") - margin[1];
-        //   var t = "translate(" + xx + "px," + yy + "px)";
-        //   return t;
-        // }) 
-        // d3.selectAll("use").each(function (p, j) {
-        //   d3.select(this).select("svg")
-        //   .style("background",'red')
-        // })
         prompts.exit().remove();
         switch (c) {
           case "prompt":
-          // table.data = this[str]  
-            // console.log(table,this[str]);  
-            // table.show();
             break;
-        
+
           default:
             break;
         }
-        // node = d3.selectAll('.prompt');
-        // node.foreach(function () {
-        //   console.log(this);
-        // })
-
-        // node
-        // .enter()
-        // .append("use");
       }
       function dragStart() {
-        console.log("Start")
+        console.log('drat start')
+        d3.selectAll("use").style("opacity", .3);
+        d3.selectAll("circle").style("opacity", .3);
         d3.select(this).raise().style("opacity", 1);
       }
       function draged(dd) {
-        // console.log(dd, d3.event,table)
+        console.log('drag ')
+        env.lineStatus = 0;
         dd.status = 'move'
         d3.select(this)
           .attr("x", dd.x = d3.event.x)
           .attr("y", dd.y = d3.event.y);
 
-        // var y = coordToPiex(+d.coory);
-        // var yy = piexScale(y, "y") - margin[1];
-        dd.coorx = diffCoordToPiex(diffPiexScale(dd.x + margin[0],"x"));
+        dd.coorx = diffCoordToPiex(diffPiexScale(dd.x + margin[0], "x"));
         dd.coory = diffCoordToPiex(diffPiexScale(dd.y + margin[1], "y"));
-        // console.log(table, obj)
-        // table.data = obj.dataPrompt
-        // table.show()
-        // .attr("x",function (d) {
-
-        //     var x = coordToPiex(+d.coorx);
-        //     var xx = piexScale(x, "x") - margin[0];
-        //     // return xx;
-        //   return d3.event.x
-        //   })
-        //   .attr("y", function (d) {
-
-        //     var y = coordToPiex(+d.coory);
-        //     var yy = piexScale(y, "y") - margin[1];
-        //     // return yy;
-        //     return d3.event.y
-        //   })
-        // .style("transform", function (d) {
-        // return "translate("+ (d3.event.x - margin[0])+"px,"+(d3.event.y ) +"px)"
-        // return "translate("+ (d3.event.x - margin[0])+"px,"+(d3.event.y - margin[1]) +"px)"
-        // })
       }
       function dragEnd() {
-        d3.select(this).style("opacity", .2)
+        console.log('drag-end')
+        d3.selectAll("use").style("opacity", 1);
+        d3.selectAll("circle").style("opacity", 1);
       }
+
+      function dragNodeStart() {
+        d3.selectAll("use").style("opacity", .3);
+        d3.selectAll("circle").style("opacity", .3);
+        d3.select(this).raise().style("opacity", 1);
+      }
+      function dragNodeed(dd) {
+        console.log('drag ')
+        env.lineStatus = 0;
+        dd.status = 'move'
+        d3.select(this)
+          .attr("cx", dd.x = d3.event.x)
+          .attr("cy", dd.y = d3.event.y);
+
+        dd.coorx = diffCoordToPiex(diffPiexScale(dd.x + margin[0], "x"));
+        dd.coory = diffCoordToPiex(diffPiexScale(dd.y + margin[1], "y"));
+      }
+      function dragNodeEnd() {
+        console.log('drag-end')
+        d3.selectAll("use").style("opacity", 1);
+        d3.selectAll("circle").style("opacity", 1);
+      }
+
+
 
       function piexScale(coord, str) {
         if (!str) {
@@ -225,7 +254,7 @@
         return coord * defaultImgScale;
       }
 
-      function diffPiexScale(coord,str) {
+      function diffPiexScale(coord, str) {
         if (!str) {
           return coord / translate.k
         }
@@ -237,7 +266,7 @@
 
       function zoomStart() {
 
-        console.log(1)
+        // console.log(1)
       }
 
       function zooming() {
@@ -293,12 +322,28 @@
           .attr("height", this.height + "")
           .style("position", "absolute")
           .style("z-index", 200)
-          .style("pointer-events", "none")
-          ;
+          .style("pointer-events", "none");
+
+
+
+
+        ;
 
 
 
         this.svg = d3.select(this.box).select("svg");
+        this.svg.append("rect")
+          .attr('id', 'pathBg')
+          .attr("width", this.width + "")
+          .attr('height', this.height + "")
+          .style("fill", 'red')
+          .style('fill-opacity', 0)
+          .style('pointer-events', 'none')
+          .on("mousemove", function (d) {
+            if (env.lineStatus == 1) {
+              console.log('svg======:', d, d3.event);
+            }
+          });
 
         this.svg.append("g")
           .attr("class", "prompt");
@@ -371,25 +416,8 @@
         drawPrompts.call(this, "dataPrompt");
         drawPrompts.call(this, "dataIbeacon");
         drawPrompts.call(this, "dataNode")
-        // drawList.call(this);
       }
 
-      // function drawList() {
-      //   let _promptlist = d3.select('#promptlist').selectAll("li").data(this.dataPrompt);
-      //   _promptlist.enter()
-      //     .append("li");
-      //   let =  _promptlist.selectAll("#promptId").data(d);
-
-      //   // _promptlist.each(function (p, j) {
-      //   //   let li = d3.select(this).select('#promptId').data(p);
-      //   //   li.enter()
-      //   //     .append("p")
-      //   //     .attr("id", "promptId")
-      //   //     .html(p.id)
-      //   // })
-      //   _promptlist.exit().remove()
-
-      // }
     }
 
 

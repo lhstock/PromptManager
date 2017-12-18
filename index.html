@@ -157,44 +157,13 @@
 
             </template>
           </div>
-          </div>
-          <div>
+        </div>
+        <div>
 
-            <p>node</p>
-            <div id="nodeview">
-              <template>
-                <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName">
-                  <el-table-column type="expand">
-                    <el-table-column type="selection">
-                    </el-table-column>
-                    <el-table-column type="index" :index="indexMethod">
-                    </el-table-column>
-                    <el-table-column prop="id" label="id">
-                    </el-table-column>
-                    <el-table-column prop="coorx" label="coorx">
-                    </el-table-column>
-                    <el-table-column prop="coory" label="coory">
-                    </el-table-column>
-                    <el-table-column prop="status" label="状态" :filters="[{ text: 'init', value: 'init' }, { text: 'move', value: 'move' },{text:'done',value:'done'}]"
-                      :filter-method="filterTag" filter-placement="bottom-end">
-                      <template slot-scope="scope">
-                        <el-tag :type="scope.row.status === 'init' ? 'primary' : 'success'" close-transition>{{scope.row.status}}</el-tag>
-                      </template>
-                    </el-table-column>
-                </el-table>
-                <div style="margin-top: 5px">
-                  <el-button size='mini' @click='add()'>添加</el-button>
-                  <el-button size='mini' @click='remove()'>删除</el-button>
-                  <el-button size='mini' @click='commit()'>提交</el-button>
-                </div>
-              </template>
-            </div>
-          </div>
-          <div>
-            <p>links</p>
-            <div id="linksview">
-              <template>
-                <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName">
+          <p>node</p>
+          <div id="nodeview">
+            <template>
+              <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName">
                   <el-table-column type="selection">
                   </el-table-column>
                   <el-table-column type="index" :index="indexMethod">
@@ -211,22 +180,52 @@
                       <el-tag :type="scope.row.status === 'init' ? 'primary' : 'success'" close-transition>{{scope.row.status}}</el-tag>
                     </template>
                   </el-table-column>
-                </el-table>
-                <div style="margin-top: 5px">
-                  <el-button size='mini' @click='add()'>添加</el-button>
-                  <el-button size='mini' @click='remove()'>删除</el-button>
-                  <el-button size='mini' @click='commit()'>提交</el-button>
-                </div>
-              </template>
-
-            </div>
+              </el-table>
+              <div style="margin-top: 5px">
+                <el-button size='mini' @click='add()'>添加</el-button>
+                <el-button size='mini' @click='remove()'>删除</el-button>
+                <el-button size='mini' @click='commit()'>提交</el-button>
+              </div>
+            </template>
           </div>
         </div>
-        <!-- Table-Option-End -->
+        <div>
+          <p>links</p>
+          <div id="linksview">
+            <template>
+              <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName">
+                <el-table-column type="selection">
+                </el-table-column>
+                <el-table-column type="index" :index="indexMethod">
+                </el-table-column>
+                <el-table-column prop="id" label="id">
+                </el-table-column>
+                <el-table-column prop="sourceID" label="SourceIndex">
+                </el-table-column>
+                <el-table-column prop="targetID" label="TargetIndex">
+                </el-table-column>
+                <el-table-column prop="status" label="状态" :filters="[{ text: 'init', value: 'init' }, { text: 'move', value: 'move' },{text:'done',value:'done'}]"
+                  :filter-method="filterTag" filter-placement="bottom-end">
+                  <template slot-scope="scope">
+                    <el-tag :type="scope.row.status === 'init' ? 'primary' : 'success'" close-transition>{{scope.row.status}}</el-tag>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="margin-top: 5px">
+                <el-button size='mini' @click='add()'>添加</el-button>
+                <el-button size='mini' @click='remove()'>删除</el-button>
+                <el-button size='mini' @click='commit()'>提交</el-button>
+              </div>
+            </template>
+
+          </div>
+        </div>
       </div>
-      <!-- Option-End -->
+      <!-- Table-Option-End -->
     </div>
-    <!-- Main-End -->
+    <!-- Option-End -->
+  </div>
+  <!-- Main-End -->
 </body>
 
 <script src="./js/Unit.js"></script>

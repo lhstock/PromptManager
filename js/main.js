@@ -54,23 +54,14 @@
       target === [...siblings][1] && console.log("del")
     }
 
-    Append() {
-
-    }
-
-    Exit() {
-
-    }
-
-
     Import(e) {
       function draw(key) {
         let [a, ...b] = key;
         let type = "data" + a.toUpperCase() + [...b].join('');
-        console.log(type)
         env.SetData(type, o.dataManager[key])
         env.Draw();
       }
+
       let target = e.target;
       let siblings = target.parentNode.children;
       let o = this;
@@ -147,7 +138,6 @@
                         break;
                       default:
                         o.dataManager.clear('prompt');
-
                         o.SYNC();
                         break;
                     }
@@ -168,9 +158,11 @@
                 d3.tsv(dataUrl, function (err, json) {
                   if (!err) {
                     o.dataManager.SetData('ibeacon', json);
+                    o.SYNC();
                     draw('ibeacon');
                   } else {
                     o.dataManager.clear('ibeacon');
+                    o.SYNC();
                     draw('ibeacon');
                   }
                 })
@@ -180,9 +172,11 @@
                 d3.json(dataUrl, function (err, json) {
                   if (!err) {
                     o.dataManager.SetData("node", json);
+                    o.SYNC();
                     draw('node')
                   } else {
                     o.dataManager.clear('node');
+                    o.SYNC();
                     draw('node')
                   }
                 })
@@ -193,9 +187,11 @@
                 d3.json(dataUrl, function (err, json) {
                   if (!err) {
                     o.dataManager.SetData('links', json);
+                    o.SYNC();
                     draw('links');
                   } else {
                     o.dataManager.clear('links');
+                    o.SYNC();
                     draw('links')
                   }
                 })
@@ -218,9 +214,7 @@
       table4.em.tableData = dataManager.links;
     }
 
-    Export() {
 
-    }
 
     GetCoordinate() {
 

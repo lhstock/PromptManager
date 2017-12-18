@@ -38,6 +38,7 @@
           //   }
           // },
           add() {
+            console.log(_,elmTable,env,this)
             elmTable.data.add(label);
             env.Draw();
           },
@@ -60,11 +61,9 @@
             } else if (rowIndex === 'done') {
               return 'success-row';
             }
-            // return '';
           }
         }
       })
-      // return _[label];
     }
     return _[label];
   }
