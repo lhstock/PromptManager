@@ -155,7 +155,7 @@
                     draw('prompt');
                     if (!o.dataManager.prompt.length) alert("数据为空")
                   } else {
-                    o.dataManager.clearPrompt();
+                    o.dataManager.clear('prompt');
                     o.SYNC();
                     draw('prompt');
 
