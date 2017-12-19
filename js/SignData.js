@@ -53,6 +53,12 @@
  
           break;  
         case 'links':
+          var obj = this[key][num - 1];
+          var id = obj ? +obj.id + 1 : 1;
+          var json = '{"id":' + id + ',"source":0,"target":1,"status":"add"}';
+          var o = JSON.parse(json);
+          this[key].push(o);
+
           break;  
 
         default:

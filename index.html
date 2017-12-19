@@ -200,14 +200,14 @@
                 </el-table-column>
                 <el-table-column prop="id" label="id">
                 </el-table-column>
-                <el-table-column prop="sourceID" label="SourceIndex">
+                <el-table-column prop="source" label="SourceIndex">
                 </el-table-column>
-                <el-table-column prop="targetID" label="TargetIndex">
+                <el-table-column prop="target" label="TargetIndex">
                 </el-table-column>
-                <el-table-column prop="status" label="状态" :filters="[{ text: 'init', value: 'init' }, { text: 'move', value: 'move' },{text:'done',value:'done'}]"
+                <el-table-column prop="status" label="状态" :filters="[{ text: 'add', value: 'add' },{text:'done',value:'done'}]"
                   :filter-method="filterTag" filter-placement="bottom-end">
                   <template slot-scope="scope">
-                    <el-tag :type="scope.row.status === 'init' ? 'primary' : 'success'" close-transition>{{scope.row.status}}</el-tag>
+                    <el-tag :type="scope.row.status === 'add' ? 'primary' : 'success'" close-transition>{{scope.row.status}}</el-tag>
                   </template>
                 </el-table-column>
               </el-table>
