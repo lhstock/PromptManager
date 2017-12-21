@@ -1,5 +1,5 @@
 
-((window, MapEnv, Sign, elmTable) => {
+((window, MapEnv, Sign, elmTable,test) => {
   console.log(this, d3.version, $(".view"));
 
   class Ctrl {
@@ -228,12 +228,13 @@
 
   }
 
-  window.dataManager = new Sign();
-  window.table1 = elmTable.Create('prompt');
-  window.table2 = elmTable.Create('ibeacon');
-  window.table3 = elmTable.Create('node');
-  window.table4 = elmTable.Create('links')
-  window.n = new Ctrl(dataManager);
-  window.env = new MapEnv('views');
+  // window.dataManager = new Sign();
+  // window.table1 = elmTable.Create('prompt');
+  // window.table2 = elmTable.Create('ibeacon');
+  // window.table3 = elmTable.Create('node');
+  // window.table4 = elmTable.Create('links')
+  // window.n = new Ctrl(dataManager);
+  // window.env = new MapEnv('views');
+  window.test = new test('views');
 }
-)(window, MapEnv, Sign, elmTable);
+)(window, MapEnv, Sign, elmTable,test);

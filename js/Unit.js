@@ -41,6 +41,14 @@
       }
 
     }
+    unit.getAttr = function (dom,attr) {
+      if (typeof dom === "string") {
+          dom = window[dom];
+        }
+        return $(dom)[attr]();
+
+    }
+    return unit;
   }
   window.Unit = Unit;
 }()
