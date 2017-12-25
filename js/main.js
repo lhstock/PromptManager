@@ -1,5 +1,5 @@
 
-((window, MapEnv, Sign, elmTable,test) => {
+((window, MapEnv, Sign, elmTable, test) => {
   console.log(this, d3.version, $(".view"));
 
   class Ctrl {
@@ -235,6 +235,12 @@
   // window.table4 = elmTable.Create('links')
   // window.n = new Ctrl(dataManager);
   // window.env = new MapEnv('views');
-  window.test = new test('views');
+  let floorUrl = "./img/" + 1 + "f.jpg";
+  // env.SetDataImg()
+  window.test = new test('views')
+    .FloorOption([5378, 2174, floorUrl, 1])
+    .Init()
+    ;
+
 }
-)(window, MapEnv, Sign, elmTable,test);
+)(window, MapEnv, Sign, elmTable, test);
