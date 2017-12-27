@@ -228,18 +228,18 @@
 
   }
 
-  // window.dataManager = new Sign();
-  // window.table1 = elmTable.Create('prompt');
-  // window.table2 = elmTable.Create('ibeacon');
-  // window.table3 = elmTable.Create('node');
-  // window.table4 = elmTable.Create('links')
-  // window.n = new Ctrl(dataManager);
-  // window.env = new MapEnv('views');
-  let floorUrl = "./img/" + 1 + "f.jpg";
+  window.dataManager = new Sign();
+  window.table1 = elmTable.Create('prompt');
+  window.table2 = elmTable.Create('ibeacon');
+  window.table3 = elmTable.Create('node');
+  window.table4 = elmTable.Create('links')
+  window.n = new Ctrl(dataManager);
+  window.env = new MapEnv('views');
+  // let floorUrl = "./img/" + 1 + "f.jpg";
   // env.SetDataImg()
-  window.test = new test('views')
-    .FloorOption([5378, 2174, floorUrl, 1])
-    .Init()
+  // window.test = new test('views')
+    // .FloorOption([5378, 2174, floorUrl, 1])
+    // .Init()
     ;
 
 }

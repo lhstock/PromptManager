@@ -85,7 +85,8 @@
           <p>prompt</p>
           <div id="promptview">
             <template>
-              <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName">
+              <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName"
+                @selection-change="handleSelectionChange">
                 <el-table-column type="expand">
                   <template slot-scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
@@ -109,9 +110,19 @@
                 </el-table-column>
                 <el-table-column prop="id" label="id">
                 </el-table-column>
-                <el-table-column prop="coorx" label="coorx">
+                <!-- <el-table-column prop="coorx" label="coorx">
                 </el-table-column>
                 <el-table-column prop="coory" label="coory">
+                </el-table-column> -->
+                <el-table-column label="coorx">
+                  <template slot-scope="scope">
+                    <el-input class="input-x-lh" v-bind:value="scope.row.coorx" @change="change(scope.row,scope.$index,0)"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="coory">
+                  <template slot-scope="scope">
+                    <el-input class="input-y-lh" v-bind:value="scope.row.coory" @change="change(scope.row,scope.$index,1)"></el-input>
+                  </template>
                 </el-table-column>
                 <el-table-column prop="status" label="状态" :filters="[{ text: 'init', value: 'init' }, { text: 'move', value: 'move' },{text:'done',value:'done'}]"
                   :filter-method="filterTag" filter-placement="bottom-end">
@@ -133,14 +144,25 @@
           <p>ibeacon</p>
           <div id="ibeaconview">
             <template>
-              <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName">
+              <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName"
+                @selection-change="handleSelectionChange">
                 <el-table-column type="selection">
                 </el-table-column>
                 <el-table-column prop="id" label="id">
                 </el-table-column>
-                <el-table-column prop="coorx" label="coorx">
+                <!-- <el-table-column prop="coorx" label="coorx">
                 </el-table-column>
                 <el-table-column prop="coory" label="coory">
+                </el-table-column> -->
+                <el-table-column label="coorx">
+                  <template slot-scope="scope">
+                    <el-input class="input-x-lh" v-bind:value="scope.row.coorx" @change="change(scope.row,scope.$index,0)"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="coory">
+                  <template slot-scope="scope">
+                    <el-input class="input-y-lh" v-bind:value="scope.row.coory" @change="change(scope.row,scope.$index,1)"></el-input>
+                  </template>
                 </el-table-column>
                 <el-table-column prop="status" label="状态" :filters="[{ text: 'init', value: 'init' }, { text: 'move', value: 'move' },{text:'done',value:'done'}]"
                   :filter-method="filterTag" filter-placement="bottom-end">
@@ -163,23 +185,34 @@
           <p>node</p>
           <div id="nodeview">
             <template>
-              <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName">
-                  <el-table-column type="selection">
-                  </el-table-column>
-                  <el-table-column type="index" :index="indexMethod">
-                  </el-table-column>
-                  <el-table-column prop="id" label="id">
-                  </el-table-column>
-                  <el-table-column prop="coorx" label="coorx">
-                  </el-table-column>
-                  <el-table-column prop="coory" label="coory">
-                  </el-table-column>
-                  <el-table-column prop="status" label="状态" :filters="[{ text: 'init', value: 'init' }, { text: 'move', value: 'move' },{text:'done',value:'done'}]"
-                    :filter-method="filterTag" filter-placement="bottom-end">
-                    <template slot-scope="scope">
-                      <el-tag :type="scope.row.status === 'init' ? 'primary' : 'success'" close-transition>{{scope.row.status}}</el-tag>
-                    </template>
-                  </el-table-column>
+              <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName"
+                @selection-change="handleSelectionChange">
+                <el-table-column type="selection">
+                </el-table-column>
+                <el-table-column type="index" :index="indexMethod">
+                </el-table-column>
+                <el-table-column prop="id" label="id">
+                </el-table-column>
+                <!-- <el-table-column prop="coorx" label="coorx">
+                </el-table-column>
+                <el-table-column prop="coory" label="coory">
+                </el-table-column> -->
+                   <el-table-column label="coorx">
+                  <template slot-scope="scope">
+                    <el-input class="input-x-lh" v-bind:value="scope.row.coorx" @change="change(scope.row,scope.$index,0)"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="coory">
+                  <template slot-scope="scope">
+                    <el-input class="input-y-lh" v-bind:value="scope.row.coory" @change="change(scope.row,scope.$index,1)"></el-input>
+                  </template>
+                </el-table-column>
+                             <el-table-column prop="status" label="状态" :filters="[{ text: 'init', value: 'init' }, { text: 'move', value: 'move' },{text:'done',value:'done'}]"
+                  :filter-method="filterTag" filter-placement="bottom-end">
+                  <template slot-scope="scope">
+                    <el-tag :type="scope.row.status === 'init' ? 'primary' : 'success'" close-transition>{{scope.row.status}}</el-tag>
+                  </template>
+                </el-table-column>
               </el-table>
               <div style="margin-top: 5px">
                 <el-button size='mini' @click='add()'>添加</el-button>
@@ -193,7 +226,8 @@
           <p>links</p>
           <div id="linksview">
             <template>
-              <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName">
+              <el-table ref="multipleTable" :data="tableData" height="300" style="width: calc(36vw - 50px)" :row-class-name="tableRowClassName"
+                @selection-change="handleSelectionChange">
                 <el-table-column type="selection">
                 </el-table-column>
                 <el-table-column type="index" :index="indexMethod">
@@ -204,8 +238,8 @@
                 </el-table-column>
                 <el-table-column prop="target" label="TargetIndex">
                 </el-table-column>
-                <el-table-column prop="status" label="状态" :filters="[{ text: 'add', value: 'add' },{text:'done',value:'done'}]"
-                  :filter-method="filterTag" filter-placement="bottom-end">
+                <el-table-column prop="status" label="状态" :filters="[{ text: 'add', value: 'add' },{text:'done',value:'done'}]" :filter-method="filterTag"
+                  filter-placement="bottom-end">
                   <template slot-scope="scope">
                     <el-tag :type="scope.row.status === 'add' ? 'primary' : 'success'" close-transition>{{scope.row.status}}</el-tag>
                   </template>

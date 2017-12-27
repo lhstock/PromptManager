@@ -2,20 +2,13 @@
   var elmTable = {};
   elmTable.data = new Sign();
   elmTable.Create = function (labelid) {
-    // elmTable[labelid] = {};
     return CreateElmTable(labelid);
   }
   function CreateElmTable(label) {
     var _ = {};
     _.labelid = label + 'view';
-    // var dataM = new Sign();
-
-    // _.data = dataM;
     _[label] = {};
-    // var Fun = {
-    //   "prompt": prompt
-    // }
-    // Fun[label]();
+
     prompt.call(this, _[label])
     function prompt(obj) {
       obj.em = new Vue({
@@ -25,20 +18,28 @@
           multipleSelection: [],
         },
         methods: {
+          handleSelectionChange(val) {
+            console.log(val);
+            this.multipleSelection = val;
+          },
           indexMethod(index) {
             return index;
           },
-          // toggleSelection(rows) {
-          //   if (rows) {
-          //     rows.forEach(row => {
-          //       this.$refs.multipleTable.toggleRowSelection(row);
-          //     });
-          //   } else {
-          //     this.$refs.multipleTable.clearSclearSelectionelection();
-          //   }
-          // },
+          commit() {
+            this.multipleSelection = this.multipleSelection.map(d => {
+              d.status = 'done';
+              return d;
+            })
+          },
+          change(data,index,i) {
+            var k = ['coorx', 'coory'];
+            var c = ['input-x-lh','input-y-lh']
+            data[k[i]] = + d3.select(d3.select(this.$el).selectAll("." + c[i]).select("input").nodes()[index]).node().value;
+            console.log(data, index, i, this.$el);
+            env.Draw();
+          },
           add() {
-            console.log(_,elmTable,env,this)
+            console.log(_, elmTable, env, this)
             elmTable.data.add(label);
             env.Draw();
           },

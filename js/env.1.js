@@ -2,6 +2,7 @@
   const _DrawCanvas = Symbol('drawCanvas');
   const _LoadBgForCanvas = Symbol('loadBgForCanvas');
   const _DrawSvg = Symbol('drawSvg');
+  const _DrawNodes = Symbol('drawNodes');
   const _CallAttr = Symbol('callAttr');
   const _SelectDom = Symbol('selectDom');
   const _GetDomForSelecter = Symbol('getDomforSelecter');
@@ -9,8 +10,11 @@
   const _Clear = Symbol('clear');
   const _ViewModel = Symbol('viewModel');
   const _SetBgImg = Symbol('setBgImg');
-  const _AddZoomEvent = Symbol('addZoomEvent')
+  const _AddZoomEvent = Symbol('addZoomEvent');
+  const _DataInit = Symbol('dataInit');
+  const _DataClear = Symbol('clearData');
   const _Log = Symbol('Log');
+  const _ModeSelect = Symbol("modelSelect");
   let _only = ['only'];
   let _unit = new Unit();
   let _bgImg = {};
@@ -53,10 +57,26 @@
             "z-index": 200,
             "pointer-events": "none"
           }
+        },
+        "nodes": {
+          "attr": {
+            "r": "5px",
+            "cx": function (d) {
+
+            },
+            "cy": function (d) {
+
+            },
+            "fill": "red"
+          },
+          "style": {
+            "opacity": 1,
+            "pointer-events": "fill"
+          }
         }
       };
 
-      this.model.data = {}
+      this[_DataInit]();
 
       this.model.status = {
         bg: false
@@ -75,6 +95,7 @@
       }
 
       this.model.tool = {};
+
       let _ = this;
       let model = this.model;
 
@@ -158,10 +179,20 @@
       }
     }
 
+    [_DataInit]() {
+      this.model.data = {
+        "bg": [],
+        "nodes": [],
+        "links": []
+      }
+    }
+    [_DataClear](key) {
+      this.model.data[key].length = 0;
+    }
+
   }
 
   class MapsView extends MapsModel {
-
     constructor(labelid) {
       super(labelid);
       let maps = this;
@@ -197,11 +228,13 @@
 
       strikeAttr()
     }
+
     [_AddZoomEvent]() {
       this.model.status.bg ? this.model.selecter.canvas.call(this.model.tool.zoom) : setTimeout(() => {
         this[_AddZoomEvent]();
       }, 1);
     }
+
     [_DrawCanvas]() {
       let selecter = this.model.selecter.box.selectAll('canvas').data(_only);
 
@@ -236,14 +269,21 @@
       selecter.exit().remove();
 
       this.model.selecter.svg = this.model.selecter.box.select('svg');
+      this.model.selecter.svg.append("g").attr("class", "linksGroup");
+      this.model.selecter.svg.append("g").attr("class", "nodesGroup");
+      this.model.selecter.linksGroup = this.model.selecter.svg.select(".linksGroup");
+      this.model.selecter.nodesGroup = this.model.selecter.svg.select(".nodesGroup");
+
     }
 
     [_DrawImgOnCanvas](img, x, y, width, height) {
       this.model.selecter.ctx.drawImage(img, x, y, width, height);
     }
+
     [_Clear]() {
       this.model.selecter.ctx.clearRect(0, 0, this.model.layout.boxWidth, this.model.layout.boxHeight);
     }
+
     [_LoadBgForCanvas]() {
       this.View.bgObj.src = this.model.data.bg[2];
       let maps = this;
@@ -254,6 +294,18 @@
       }
     }
 
+    [_DrawNodes]() {
+      let nodes = this.model.selecter.nodesGroup.selectAll(".nodes").data(this.model.data.nodes);
+      nodes.enter()
+        .append("circle")
+        .attr("class", 'nodes')
+        .call(this[_CallAttr], this.model.option.nodes);
+      nodes
+        .call(this[_CallAttr], this.model.option.nodes);
+      nodes.exit().remove();
+
+      this.model.selecter.nodes = this.model.selecter.nodesGroup.select('.nodes');
+    }
   }
 
   class MapsController extends MapsView {
@@ -263,6 +315,7 @@
     }
 
     [_Log]() {
+      console.log('log');
     }
 
     [_SetBgImg](option) {
